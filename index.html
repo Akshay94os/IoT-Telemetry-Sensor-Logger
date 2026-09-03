@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>IoT Sensor Hub</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:2rem;background:#090d16;color:#fff;max-width:900px;margin:auto;}table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:#0f172a;border-radius:8px;}th,td{padding:8px;border:1px solid #334155;text-align:left;}code{color:#38bdf8;}</style></head>
+<body>
+  <h1>IoT Edge Telemetry & Diagnostics</h1>
+  <p style="color:#94a3b8;">POST endpoint: <code>/ingest/&lt;node_id&gt;/</code></p>
+
+  <h2 style="margin-top:1.5rem;">Registered Sensor Nodes</h2>
+  <table>
+    <tr><th>Node ID</th><th>Location</th><th>Status</th></tr>
+    {% for n in nodes %}
+      <tr><td><b>{{ n.node_id }}</b></td><td>{{ n.location }}</td><td><span style="color:#4ade80;">Active</span></td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Latest Sensor Readings</h2>
+  <table>
+    <tr><th>Node</th><th>Temp (°C)</th><th>Humidity</th><th>Voltage</th><th>Status</th><th>Time</th></tr>
+    {% for r in readings %}
+      <tr>
+        <td>{{ r.node.node_id }}</td>
+        <td>{{ r.temperature_c }}°C</td>
+        <td>{{ r.humidity_percent }}%</td>
+        <td>{{ r.voltage_v }}V</td>
+        <td>{% if r.is_alert %}<span style="color:#f87171;font-weight:bold;">CRITICAL</span>{% else %}<span style="color:#4ade80;">NORMAL</span>{% endif %}</td>
+        <td>{{ r.timestamp|date:"H:i:s, M d" }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6">No telemetry streamed yet.</td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
